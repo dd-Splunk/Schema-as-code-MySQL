@@ -4,21 +4,25 @@ version: '3.1'
 services:
 
   db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    image: mariadb
     restart: always
     environment:
-      MYSQL_DATABASE: backend-db
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: example
+      MARIADB_DATABASE: backend-db
+      MARIADB_RANDOM_ROOT_PASSWORD: yes
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: example
     volumes:
       - ./conf.d:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql
     ports:
     - "3306:3306"
 
   adminer:
     image: adminer
     restart: always
+    depends_on:
+      - db
     ports:
       - 8080:8080
+volumes:
+    mysql-data: {}
